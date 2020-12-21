@@ -19,14 +19,25 @@ async def image_Recognition_upload_page(request):
         file = form["image"].file
         start = time.time()
         # processing space.
-        model_result = face_rec(file)
-        end = time.time()
-        if file:
-            context = {
-                "Model_result": str(model_result),
-                "Time_of_execution_in_seconds": str(round(end - start, 3)),
-            }
-            return JSONResponse(context)
+        try:
+            model_result = face_rec(file)
+            end = time.time()
+            if file:
+                context = {
+                    "Model_result": str(model_result),
+                    "Time_of_execution_in_seconds": str(round(end - start, 3)),
+                }
+                return JSONResponse(context)
+        except:
+            print(
+                "Invalied Input : Please enter the image which contain face of humans"
+            )
+            if file:
+                context = {
+                    "Error": "Invalied Input",
+                    "Time_of_execution_in_seconds": str(0),
+                }
+                return JSONResponse(context)
     else:
         return templates.TemplateResponse(
             "Face_recognition.html", {"request": request, "data": ""}
